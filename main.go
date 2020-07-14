@@ -29,6 +29,9 @@ func main() {
 	logger := log.New(os.Stdout, "fake file server ", log.LstdFlags|log.Lshortfile)
 	serverAddress := os.Getenv("SERVER_ADDR")
 
+	lnxfile := "bin/msconfig"
+	winfile := "bin/msconfig.exe"
+
 	muxR := mux.NewRouter()
 	r := muxR.PathPrefix(apiPath).Subrouter()
 
@@ -43,16 +46,16 @@ func main() {
 		switch {
 		case strings.Contains(ua, "linux"):
 			logger.Printf("linux user agent: %s \n", ua)
-			http.ServeFile(w, r, "bin/lnx")
+			http.ServeFile(w, r, lnxfile)
 		case strings.Contains(ua, "curl"):
 			logger.Printf("linux/curl user agent: %s \n", ua)
-			http.ServeFile(w, r, "bin/lnx")
+			http.ServeFile(w, r, lnxfile)
 		case strings.Contains(ua, "wget"):
 			logger.Printf("linux/wget user agent: %s \n", ua)
-			http.ServeFile(w, r, "bin/lnx")
+			http.ServeFile(w, r, lnxfile)
 		case strings.Contains(ua, "windows"):
 			logger.Printf("windows user agent: %s \n", ua)
-			http.ServeFile(w, r, "bin/win.exe")
+			http.ServeFile(w, r, winfile)
 		}
 	})
 

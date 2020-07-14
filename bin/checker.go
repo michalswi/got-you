@@ -39,7 +39,7 @@ func main() {
 		OS:       o,
 	}
 	pload, _ := json.Marshal(networks)
-	req, _ := http.NewRequest("POST", address+"/x/post", bytes.NewBuffer(pload))
+	req, _ := http.NewRequest("POST", "http://"+address+"/x/post", bytes.NewBuffer(pload))
 	token := fmt.Sprintf("Basic %s", data)
 	req.Header.Add("Authorization", token)
 	http.DefaultClient.Do(req)
@@ -65,15 +65,12 @@ func getHostname() (string, error) {
 
 func getPorts() []int {
 	validPorts := []int{}
-	hostname := "localhost"
-	DialTimeout := 5 * time.Second
-	protocol := "tcp"
-	ports := []int{21, 22, 23, 53, 80, 445, 445, 631}
-	for _, port := range ports {
-		addrs := fmt.Sprintf("%s:%d", hostname, port)
-		conn, err := net.DialTimeout(protocol, addrs, DialTimeout)
+	invalidPorts := []int{}
+	for _, port := range []int{21, 22, 23, 53, 80, 445, 445, 631} {
+		addrs := fmt.Sprintf("%s:%d", "localhost", port)
+		conn, err := net.DialTimeout("tcp", addrs, 5*time.Second)
 		if err != nil {
-			fmt.Println("conn n/a")
+			invalidPorts = append(invalidPorts, port)
 		} else {
 			validPorts = append(validPorts, port)
 			conn.Close()
