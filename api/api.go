@@ -9,8 +9,9 @@ import (
 
 type network struct {
 	ID       int    `json:"id"`
-	Hostname string `json:"host"`
-	IP       string `json:"ip"`
+	RemoteIP string `json:"remoteip"`
+	Hostname string `json:"hostname"`
+	LocalIP  string `json:"localip"`
 	Nmap     []int  `json:"nmap"`
 	OS       string `json:"os"`
 }
@@ -22,11 +23,14 @@ var datas []network
 // BasicAuth - basic auth for POST and GET endpoints
 func BasicAuth(logger *log.Logger, username, password, realm string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		var remoteIP string
 		forwarded := r.Header.Get("X-FORWARDED-FOR")
 		if forwarded != "" {
-			logger.Printf("from BasicAuth - someone IP: %s \n", forwarded)
+			logger.Printf("from 'BasicAuth' - someone IP: %s \n", forwarded)
+			remoteIP = forwarded
 		}
-		logger.Printf("from BasicAuth - someone IP: %s \n", r.RemoteAddr)
+		logger.Printf("from 'BasicAuth' - someone IP: %s \n", r.RemoteAddr)
+		remoteIP = r.RemoteAddr
 		user, pass, ok := r.BasicAuth()
 		if !ok || subtle.ConstantTimeCompare([]byte(user), []byte(username)) != 1 || subtle.ConstantTimeCompare([]byte(pass), []byte(password)) != 1 {
 			w.Header().Set("WWW-Authenticate", `Basic realm="`+realm+`"`)
@@ -41,12 +45,12 @@ func BasicAuth(logger *log.Logger, username, password, realm string) func(w http
 			getIPs(w, r)
 		case r.Method == http.MethodPost:
 			logger.Printf("MethodPost")
-			postIPs(w, r)
+			postIPs(w, r, remoteIP)
 		}
 	}
 }
 
-func postIPs(w http.ResponseWriter, r *http.Request) {
+func postIPs(w http.ResponseWriter, r *http.Request, remoteIP string) {
 	var net network
 	dec := json.NewDecoder(r.Body)
 	err := dec.Decode(&net)
@@ -57,8 +61,9 @@ func postIPs(w http.ResponseWriter, r *http.Request) {
 	countID++
 	datas = append(datas, network{
 		ID:       countID,
+		RemoteIP: remoteIP,
 		Hostname: net.Hostname,
-		IP:       net.IP,
+		LocalIP:  net.LocalIP,
 		Nmap:     net.Nmap,
 		OS:       net.OS,
 	})

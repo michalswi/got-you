@@ -38,9 +38,9 @@ func main() {
 	r.HandleFunc("/dw", func(w http.ResponseWriter, r *http.Request) {
 		forwarded := r.Header.Get("X-FORWARDED-FOR")
 		if forwarded != "" {
-			logger.Printf("from main - someone IP: %s \n", forwarded)
+			logger.Printf("from '/dw' - someone IP: %s \n", forwarded)
 		}
-		logger.Printf("from main - someone IP: %s \n", r.RemoteAddr)
+		logger.Printf("from '/dw' - someone IP: %s \n", r.RemoteAddr)
 		ua := r.Header.Get("User-Agent")
 		ua = strings.ToLower(ua)
 		switch {

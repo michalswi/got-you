@@ -12,10 +12,10 @@ import (
 )
 
 type network struct {
-	Hostname string `json:"host"`
-	IP       string `json:"ip"`
-	Nmap     []int  `json:"nmap"`
-	OS       string `json:"os"`
+	Hostname string
+	LocalIP  string
+	Nmap     []int
+	OS       string
 }
 
 var address string
@@ -34,7 +34,7 @@ func main() {
 	o := runtime.GOOS
 	networks := &network{
 		Hostname: h,
-		IP:       i,
+		LocalIP:  i,
 		Nmap:     p,
 		OS:       o,
 	}
