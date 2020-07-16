@@ -15,8 +15,9 @@ help:
 
 build-linux:	## Build linux checker binary
 	GOOS=linux \
-	go build \
-	-ldflags "-X 'main.address=$(DOMAIN_NAME):$(SERVER_ADDR)' \
+	go build -a \
+	-ldflags "-s -w \
+	-X 'main.address=$(DOMAIN_NAME):$(SERVER_ADDR)' \
 	-X 'main.data=$(DDATA)'" \
 	-o bin/$(LNAME) bin/checker.go
 

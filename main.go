@@ -35,12 +35,13 @@ func main() {
 	muxR := mux.NewRouter()
 	r := muxR.PathPrefix(apiPath).Subrouter()
 
+	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		checkIP(w, r, logger)
+		http.ServeFile(w, r, "index.html")
+	})
+
 	r.HandleFunc("/dw", func(w http.ResponseWriter, r *http.Request) {
-		forwarded := r.Header.Get("X-FORWARDED-FOR")
-		if forwarded != "" {
-			logger.Printf("from '/dw' - someone IP: %s \n", forwarded)
-		}
-		logger.Printf("from '/dw' - someone IP: %s \n", r.RemoteAddr)
+		checkIP(w, r, logger)
 		ua := r.Header.Get("User-Agent")
 		ua = strings.ToLower(ua)
 		switch {
@@ -62,6 +63,7 @@ func main() {
 	r.HandleFunc("/hz", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "OK")
 	})
+
 	r.Path("/get").Methods("GET").HandlerFunc(api.BasicAuth(logger, user, getPass, "like your t-shirt"))
 	r.Path("/post").Methods("POST").HandlerFunc(api.BasicAuth(logger, user, postPass, "like your t-shirt"))
 
@@ -89,4 +91,12 @@ func gracefulShutdown(srv *http.Server, logger *log.Logger) {
 	}
 	logger.Printf("Shutting down the server...\n")
 	os.Exit(0)
+}
+
+func checkIP(w http.ResponseWriter, r *http.Request, logger *log.Logger) {
+	forwarded := r.Header.Get("X-FORWARDED-FOR")
+	if forwarded != "" {
+		logger.Printf("from '%s' - someone IP: %s \n", r.URL.Path, forwarded)
+	}
+	logger.Printf("from '%s' - someone IP: %s \n", r.URL.Path, r.RemoteAddr)
 }
