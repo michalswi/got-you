@@ -19,7 +19,8 @@ build-linux:	## Build linux checker binary
 	-ldflags "-s -w \
 	-X 'main.address=$(DOMAIN_NAME):$(SERVER_ADDR)' \
 	-X 'main.data=$(DDATA)'" \
-	-o bin/$(LNAME) bin/checker.go
+	-o bin/$(LNAME) bin/checker.go && \
+	upx bin/$(LNAME)
 
 web:	## Run web server - no bin
 	SERVER_ADDR=$(SERVER_ADDR) go run \

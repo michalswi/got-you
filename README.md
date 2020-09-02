@@ -1,3 +1,6 @@
+\# to be **installed**:
+- make
+- upx
 
 \# **make** your friend
 
