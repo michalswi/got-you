@@ -12,6 +12,7 @@ type network struct {
 	RemoteIP string `json:"remoteip"`
 	Hostname string `json:"hostname"`
 	LocalIP  string `json:"localip"`
+	PublicIP string `json:"publicip"`
 	Nmap     []int  `json:"nmap"`
 	OS       string `json:"os"`
 }
@@ -64,6 +65,7 @@ func postIPs(w http.ResponseWriter, r *http.Request, remoteIP string) {
 		RemoteIP: remoteIP,
 		Hostname: net.Hostname,
 		LocalIP:  net.LocalIP,
+		PublicIP: net.PublicIP,
 		Nmap:     net.Nmap,
 		OS:       net.OS,
 	})
