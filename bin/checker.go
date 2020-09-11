@@ -53,8 +53,7 @@ func main() {
 }
 
 func getPrivateIP() (string, error) {
-	// (?) if behind NAT returns private IP
-	conn, err := net.Dial("udp", "8.8.8.8:80")
+	conn, err := net.Dial("udp", "1.1.1.1:80")
 	if err != nil {
 		return "", err
 	}
@@ -89,7 +88,7 @@ func getHostname() (string, error) {
 func getPorts() []int {
 	validPorts := []int{}
 	invalidPorts := []int{}
-	for _, port := range []int{21, 22, 23, 53, 80, 445, 445, 631} {
+	for _, port := range []int{21, 22, 23, 25, 53, 67, 80, 139, 445, 631} {
 		addrs := fmt.Sprintf("%s:%d", "localhost", port)
 		conn, err := net.DialTimeout("tcp", addrs, 5*time.Second)
 		if err != nil {
