@@ -5,10 +5,18 @@
 \# **make** your friend
 
 ```
-[tty1]$ make build-linux
-[tty1]$ make web
+[pts1]$ make build-linux
+[pts1]$ tree -ah bin/
+bin/
+├── [1.8K]  checker.go
+└── [1.7M]  msconfig
+[pts1]$ make web
 
-[tty2]$ make wget
-[tty2]$ ./dw
-[tty2]$ make get
+[pts2]$ firefox http://localhost:8080/x/
+
+[pts2]$ make wget
+[pts2]$ ./dw
+[pts2]$ make get
+
+[pts2]$ make remove-bins
 ```

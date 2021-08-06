@@ -13,6 +13,13 @@ help:
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?##/ \
 	{ printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
 
+web:	## Run web server - no bin
+	SERVER_ADDR=$(SERVER_ADDR) go run \
+	-ldflags "-X 'main.user=$(DUSER)' \
+	-X 'main.getPass=$(GETPASS)' \
+	-X 'main.postPass=$(POSTPASS)'" \
+	.
+
 build-linux:	## Build linux checker binary
 	GOOS=linux \
 	go build -a \
@@ -21,13 +28,6 @@ build-linux:	## Build linux checker binary
 	-X 'main.data=$(DDATA)'" \
 	-o bin/$(LNAME) bin/checker.go && \
 	upx bin/$(LNAME)
-
-web:	## Run web server - no bin
-	SERVER_ADDR=$(SERVER_ADDR) go run \
-	-ldflags "-X 'main.user=$(DUSER)' \
-	-X 'main.getPass=$(GETPASS)' \
-	-X 'main.postPass=$(POSTPASS)'" \
-	.
 
 checker:	## Run checker - no bin
 	go run \
@@ -41,3 +41,6 @@ get:	## GET data
 wget:	## Download binary
 	wget $(DOMAIN_NAME):$(SERVER_ADDR)/x/dw && \
 	chmod +x dw
+
+remove-bins:	## Remove linux binary from bin/
+	rm -rf bin/$(LNAME)

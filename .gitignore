@@ -3,3 +3,4 @@ Makefile
 Dockerfile
 dw
 web/
+bin/msconfig*
