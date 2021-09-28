@@ -7,7 +7,7 @@ DOMAIN_NAME ?= localhost
 SERVER_ADDR ?= 8080
 
 .DEFAULT_GOAL := help
-.PHONY: web checker get
+.PHONY: web build-linux checker get wget remove-bins
 
 help:
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?##/ \
