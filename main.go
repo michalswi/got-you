@@ -12,8 +12,8 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/michalswi/got-you.git/api"
-	"github.com/michalswi/got-you.git/server"
+	"github.com/michalswi/got-you/api"
+	"github.com/michalswi/got-you/server"
 )
 
 const (
@@ -70,7 +70,7 @@ func main() {
 	srv := server.NewServer(r, serverAddress)
 
 	go func() {
-		logger.Printf("Starting server on port %s...\n", serverAddress)
+		logger.Printf("Server is ready to handle requests at port %s..", serverAddress)
 		err := srv.ListenAndServe()
 		if err != nil {
 			logger.Fatalf("Server failed to start: %v\n", err)
