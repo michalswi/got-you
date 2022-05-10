@@ -63,6 +63,9 @@ func getPrivateIP() (string, error) {
 }
 
 func getPublicIP() (string, error) {
+	// https://github.com/michalswi/whatismyip
+	// https://github.com/michalswi/azure-vm-behind-lb
+	// url := "http://<name>.westeurope.cloudapp.azure.com/ip"
 	url := "https://api.ipify.org?format=text"
 	resp, err := http.Get(url)
 	if err != nil {

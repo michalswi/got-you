@@ -1,6 +1,6 @@
-howto.txt
-Makefile
-Dockerfile
+__*
+Make*
+Docker*
 dw
 web/
 bin/msconfig*
